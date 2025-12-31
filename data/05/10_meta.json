@@ -1,0 +1,16 @@
+{
+  "video_path": "videos\\Folder1\\Part1\\05\\10.MOV",
+  "fps": 30.02461852377573,
+  "total_frames_est": 18050,
+  "processed_frames": 18050,
+  "process_every_n_frames": 1,
+  "face_detected_frames": 18050,
+  "face_detected_ratio": 1.0,
+  "landmarks_shape": [
+    18050,
+    468,
+    3
+  ],
+  "coords": "mediapipe_normalized_xyz",
+  "note": "Frames with no detected face contain NaN landmarks."
+}
