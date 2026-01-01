@@ -24,9 +24,12 @@ kagglehub/
 data/
 *.csv
 
-# 用于CV的大数组文件 
+# 用于CV
 *.npz
 !data/
 !data/**/
 !data/**/*.json
+!exported_data/features_frame_level.csv
+!exported_data/features_window_level.csv
+results/
 

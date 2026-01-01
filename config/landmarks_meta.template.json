@@ -1,0 +1,12 @@
+{
+  "video_path": "videos/",
+  "fps": 30.0,
+  "total_frames_est": 900,
+  "processed_frames": 900,
+  "process_every_n_frames": 1,
+  "face_detected_frames": 850,
+  "face_detected_ratio": 0.9444,
+  "landmarks_shape": [900, 468, 3],
+  "coords": "mediapipe_normalized_xyz",
+  "note": "Frames with no detected face contain NaN landmarks."
+}

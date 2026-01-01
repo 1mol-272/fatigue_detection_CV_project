@@ -1,0 +1,18 @@
+# Example config (human reference only; CLI flags are the source of truth)
+paths:
+  videos: videos/
+  landmarks: data/
+  exported: exported_data/
+  processed: processed_data/
+params:
+  process_every_n_frames: 1
+  window_size: 60
+  stride: 60
+  blink_ear_thresh: 0.21
+  yawn_mar_thresh: 0.60
+labels:
+  rules:
+    - pattern: alert
+      label: alert
+    - pattern: drowsy
+      label: drowsy
