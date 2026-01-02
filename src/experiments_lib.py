@@ -1,7 +1,7 @@
 """
 experiments_lib.py
 
-Reusable sweep utilities (no argparse, no CLI).
+Reusable sweep utilities.
 
 Data vs results policy:
 - exported_data/: data artifacts ONLY (e.g., window-level CSVs)

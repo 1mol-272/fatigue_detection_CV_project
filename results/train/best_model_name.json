@@ -1,0 +1,14 @@
+{
+  "best_model": "HGB",
+  "selected_on": "val",
+  "choose_by": "f1_macro",
+  "features": [
+    "ear_mean_mean",
+    "ear_mean_std",
+    "mar_mean",
+    "mar_std",
+    "blink_ratio",
+    "yawn_ratio",
+    "ear_diff_mean"
+  ]
+}

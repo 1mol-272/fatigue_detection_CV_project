@@ -160,16 +160,27 @@ def train_and_compare(
 
     models = make_models(random_state)
 
-    rows: List[dict] = []
+    rows_select: List[dict] = []
+    rows_test_all: List[dict] = []
+
     best_name = None
     best_score = float("-inf")
     best_model = None
 
     for name, model in models.items():
-        m = fit_and_eval(model, X_train, y_train, X_eval, y_eval)
-        score = float(m.get(choose_by, m["f1_macro"]))
+        # fit once
+        model.fit(X_train, y_train)
 
-        rows.append({"model": name, "select_split": eval_name, **m})
+        # 1) selection metrics (val preferred else test) for choosing best model
+        pred_eval = model.predict(X_eval)
+        m_eval = _compute_metrics(y_eval, pred_eval)
+        score = float(m_eval.get(choose_by, m_eval["f1_macro"]))
+        rows_select.append({"model": name, "select_split": eval_name, **m_eval})
+
+        # 2) test metrics (always test) for robustness aggregation later
+        pred_test = model.predict(X_test)
+        m_test = _compute_metrics(y_test, pred_test)
+        rows_test_all.append({"model": name, **m_test})
 
         if score > best_score:
             best_score = score
@@ -178,8 +189,11 @@ def train_and_compare(
 
     assert best_model is not None and best_name is not None
 
-    metrics_select_df = pd.DataFrame(rows).sort_values(by=choose_by, ascending=False)
+    metrics_select_df = pd.DataFrame(rows_select).sort_values(by=choose_by, ascending=False)
     metrics_select_df.to_csv(os.path.join(results_dir, "metrics_select.csv"), index=False)
+    
+    metrics_test_all_df = pd.DataFrame(rows_test_all).sort_values(by="f1_macro", ascending=False)
+    metrics_test_all_df.to_csv(os.path.join(results_dir, "metrics_test_all.csv"), index=False)
 
     # Refit best on train, evaluate on test
     best_model.fit(X_train, y_train)

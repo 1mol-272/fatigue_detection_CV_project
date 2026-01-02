@@ -16,6 +16,12 @@ Usage:
 
 import argparse
 import os
+import sys
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(REPO_ROOT, "src")
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
 
 from landmarks import run_extract_landmarks
 from frame_features import run_extract_frame_features

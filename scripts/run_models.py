@@ -19,11 +19,9 @@ This script enforces that by:
 from __future__ import annotations
 
 import os
-import sys
 import argparse
+import sys
 
-
-# ---- Ensure src is importable even if user doesn't set PYTHONPATH (Scheme C)
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(REPO_ROOT, "src")
 if SRC_DIR not in sys.path:

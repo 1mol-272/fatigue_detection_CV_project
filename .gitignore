@@ -31,5 +31,5 @@ data/
 !data/**/*.json
 !exported_data/features_frame_level.csv
 !exported_data/features_window_level.csv
-results/
-
+results/experiments/**
+!results/experiments/.gitkeep
