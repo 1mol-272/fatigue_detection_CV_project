@@ -84,7 +84,7 @@ def make_models(random_state: int) -> Dict[str, object]:
     """
     models: Dict[str, object] = {}
 
-    models["RF_baseline"] = RandomForestClassifier(
+    models["RF"] = RandomForestClassifier(
         n_estimators=200,
         random_state=random_state,
         n_jobs=-1,
