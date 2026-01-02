@@ -45,6 +45,7 @@ ComputerVision
   - `run_dataset.py`: run the data pipeline up to dataset generation (`processed_data/`)
   - `run_models.py`: model training (`train`) and parameter sweep (`sweep`)
   - `summarize_robustness.py`: read-only summarization of sweep outputs into robustness tables
+  - `visualize_results.py`: generate plots/tables (confusion matrix, permutation importance, feature distributions) into `results/train/`
 
 - **`notebooks/`**  
   Original exploratory notebooks kept for reference; the reproducible pipeline is implemented in `src/` + `scripts/`.
@@ -84,6 +85,8 @@ These folders contain **large inputs / intermediate artifacts** and are typicall
     - `best_model_name.json` — metadata (best model name, selection metric, feature list, etc.)
     - `classification_report_test.txt` — sklearn classification report on test
     - `confusion_matrix_test.csv` — confusion matrix on test
+    - `figures/` — generated figures (confusion matrix, permutation importance, feature distributions)
+    - `tables/` — generated tables (sorted test metrics as CSV/MD)
 
   - **`results/experiments/`** *(robustness sweeps)*  
     Produced by `scripts/run_models.py sweep`. 
@@ -163,7 +166,15 @@ python scripts/run_models.py train --processed_dir processed_data
 Outputs are written to:
 - `results/train/` (metrics tables, best model, reports, confusion matrix, etc.)
 
-### 5.3 Robustness sweep
+### 5.3 Visualize training results
+
+Generate plots and tables for the selected best model (**HGB**) and save them to `results/train/figures/` and `results/train/tables/`:
+
+```bash
+python scripts/visualize_results.py --processed_dir processed_data --results_dir results/train
+```
+
+### 5.4 Robustness sweep
 
 Run a parameter sweep over dataset-construction settings (e.g., window size, blink/yawn thresholds, min frames).
 
@@ -178,7 +189,7 @@ Artifacts are separated by design:
 - Training results artifacts:
   - `results/experiments/<exp_name>/...`
 
-### 5.4 Summarize robustness results
+### 5.5 Summarize robustness results
 
 This script does not generate new experiments. It only reads `results/experiments/` and produces aggregated tables for robustness analysis.
 
@@ -198,17 +209,33 @@ This section summarizes the outputs produced under `results/`.
 
 **Best model** selected on **val**: `HGB` (HistGradientBoosting) using `f1_macro`.
 
-**Test performance** of the selected model (`HGB`):  
+**i. Test performance**
+
+Although `HGB` was selected as the best model on the validation split, its test-set performance is lower than the linear baselines. This discrepancy suggests that `HGB` is more sensitive to the specific train/validation split and may not generalize as consistently under our current feature set. This observation aligns with the robustness sweep, where `HGB` exhibits higher variance across parameter settings, while linear models (`LogReg` / `LinearSVM`) remain more stable.
+
 ```
-| Metric     | Value |
-|------------|-------|
-| Accuracy   | 0.558 |
-| Macro F1   | 0.555 |
+| Model     | Accuracy | Macro F1 |
+|-----------|----------|----------|
+| LogReg    | 0.592    | 0.579    |
+| LinearSVM | 0.588    | 0.577    |
+| HGB       | 0.558    | 0.555    |
+| RF        | 0.546    | 0.543    |
 ```
 
-> Note: `metrics_test_all.csv` also records the test metrics for all evaluated models, which is useful for additional comparisons and for robustness analysis.
+**ii. Error analysis (Confusion Matrix, HGB)**
 
----
+From `confusion_matrix_test.png`, HGB makes noticeable errors in both directions:
+- A large portion of Alert samples are predicted as Drowsy (false positives).
+- Some Drowsy samples are predicted as **Alert** (false negatives).
+
+Overall, the confusion matrix suggests the model is not strongly separable with the current feature set and split,
+and the errors are relatively balanced across classes (no class is trivially solved).
+
+**iii. Interpretability (Permutation Importance, HGB)**
+
+**`mar_mean`** is the most influential feature (largestaccuracy drop when permuted). **`ear_mean_mean`** is thesecond most informative feature. The remaining featurescontribute little or are close to zero importance underthis evaluation
+
+This aligns with the intuition that **mouth opening (MAR)** and **eye closure (EAR)** are key cues for drowsiness.
 
 ### 6.2 Robustness analysis via sweep (`results/experiments/` → `results/summary/`)
 
