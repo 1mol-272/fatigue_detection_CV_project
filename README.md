@@ -61,7 +61,7 @@ These folders contain **large inputs / intermediate artifacts** and are typicall
   Landmark extraction outputs (e.g., per-video landmark files and related metadata).  This folder is produced by `src/landmarks.py` (usually via `scripts/run_dataset.py`).
 
 - **`exported_data/`** *(INTERMEDIATE)*  
-  Exported feature files, produced by `src/frame_features.py` and `src/window_features.py`.
+  Exported feature files, produced by `src/frame_features.py` and `src/window_features.py`(usually via `scripts/run_dataset.py`).
   - frame-level features (e.g., `features_frame_level.csv`)
   - window-level features (e.g., `features_window_level.csv`)
 
@@ -90,7 +90,7 @@ These folders contain **large inputs / intermediate artifacts** and are typicall
 
   - **`results/experiments/`** *(robustness sweeps)*  
     Produced by `scripts/run_models.py sweep`. 
-    - `results/experiments/<exp_name>/...` — one folder per parameter setting  
+    - `<exp_name>/...` — one folder per parameter setting  
       Each `<exp_name>` typically contains the same set of artifacts as `results/train/`
       (e.g., `metrics_test_all.csv`, `best_model.joblib`, reports, etc.).
 
@@ -102,8 +102,8 @@ These folders contain **large inputs / intermediate artifacts** and are typicall
 ### 2.4 Configuration templates 
 
 - **`config/`** 
-    - `config/example.yaml` - A lightweight configuration template for the pipeline. 
-    - `config/landmarks_meta.template.json` - A template describing the expected landmark export metadata
+    - `example.yaml` - A lightweight configuration template for the pipeline. 
+    - `landmarks_meta.template.json` - A template describing the expected landmark export metadata
 
 ## 3. Installation & Environment Setup
 
